@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home / X</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@emoji-mart/css@5.3.0/dist/emoji-mart.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@emoji-mart/data@1.1.2/dist/emoji-mart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emoji-mart/react@5.3.0/dist/emoji-mart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="x.png">
+
+</head>
+<body>
+
+    <!-- Sidebar (Navigation) -->
+<!-- Sidebar (Navigation) -->
+<div class="sidebar">
+    <h2>
+        <img src="logo.png" alt="Logo" class="logo" onclick="location.reload()">
+    </h2>
+    <nav>
+        <a href="#"><i class="fas fa-home"></i> <span>Home</span></a>
+        <a href="#"><i class="fas fa-search"></i> <span>Explore</span></a>
+        <a href="#"><i class="fas fa-bell"></i> <span>Notifications</span></a>
+        <a href="message.html"><i class="fas fa-envelope"></i> <span>Messages</span></a>
+        <a href="#"><i class="fas fa-bookmark"></i> <span>Bookmarks</span></a>
+        <a href="#"><i class="fas fa-list"></i> <span>Lists</span></a>
+        <a href="profile.html"><i class="fas fa-user"></i> <span>Profile</span></a>
+        <div class="more-container">
+            <a href="#" class="more-button" onclick="toggleMoreMenu(event)">
+                <i class="fas fa-ellipsis-h"></i> <span>More</span>
+            </a>
+            <!-- Dropdown Menu -->
+            <div class="mmore-dropdown" id="moreDropdown">
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+   
+        
+
+    </nav>
+    <button class="button" onclick="openTweetPopup()">Tweet</button>
+    <div class="button-icon" onclick="openTweetPopup()"><i class="fas fa-feather"></i></div>
+</div>
+
+
+
+
+ <!-- Main Content Section (Feed) -->
+<div class="main-content">
+    <div class="main-header">Home</div>
+    <!-- Tweet Box -->
+    <div class="tweet-box">
+        <div class="profile-pic" id="tweetBoxProfilePic"></div>
+        <textarea id="tweetInput" placeholder="What's happening?" rows="3" maxlength="280"></textarea>
+        <div class="tweet-options">
+            <label for="mediaInput"><i class="fas fa-image"></i> 
+                <input type="file" id="mediaInput" accept="image/*,video/*" onchange="displayMediaPreview(event)">
+                Image/Video
+            </label>
+
+
+
+
+            <label onclick="showEmojiPicker()"><i class="fas fa-smile"></i> Emoji</label>
+            <button class="tweet-button" onclick="postTweet()">Tweet</button>
+        </div>
+        <div id="mediaPreview"></div>
+        <div id="charCounter">280</div>
+    </div>
+
+    <!-- Tweet Feed Section -->
+    <div id="tweetFeed">
+        <!-- Tweets will appear here -->
+    </div>
+</div>
+
+
+<!-- Trending Sidebar -->
+<div class="trending-sidebar">
+    <!-- Search Bar -->
+    <div class="search-bar-container">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search" oninput="showUserSuggestions()">
+        </div>
+        <div class="suggestions-card" id="suggestionsCard"></div>
+    </div>
+    
+
+  <!-- Trending Section -->
+  <div class="trending-section">
+    <!-- Add Refresh Button in Trending Section -->
+<h3>Trends for you <button onclick="refreshTrends()"><i class="fa-solid fa-retweet"></i></button></h3>
+
+    <div class="trend">
+        <span class="trend-category">Trending in Tech</span>
+        <h4>#WebDevelopment</h4>
+        <p>54.7k Tweets</p>
+    </div>
+    <div class="trend">
+        <span class="trend-category">Trending in Politics</span>
+        <h4>#Election2024</h4>
+        <p>120.5k Tweets</p>
+    </div>
+    <div class="trend">
+        <span class="trend-category">Trending in Music</span>
+        <h4>#NewMusicFriday</h4>
+        <p>35.1k Tweets</p>
+    </div>
+    <div class="trend">
+        <span class="trend-category">Trending in Sports</span>
+        <h4>#WorldCup</h4>
+        <p>92.3k Tweets</p>
+    </div>
+</div>
+
+  <!-- Who to Follow Section -->
+  <div class="who-to-follow">
+    <h3>Who to follow</h3>
+    <div class="follow-suggestion">
+        <div class="profile-pic-suggestion"></div>
+        <div class="follow-info">
+            <span class="username">User1</span>
+            <span class="handle">@user1</span>
+            <button class="follow-button">Follow</button>
+        </div>
+    </div>
+    <div class="follow-suggestion">
+        <div class="profile-pic-suggestion"></div>
+        <div class="follow-info">
+            <span class="username">User2</span>
+            <span class="handle">@user2</span>
+            <button class="follow-button">Follow</button>
+        </div>
+    </div>
+    <div class="follow-suggestion">
+        <div class="profile-pic-suggestion"></div>
+        <div class="follow-info">
+            <span class="username">User3</span>
+            <span class="handle">@user3</span>
+            <button class="follow-button">Follow</button>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Tweet Popup Card -->
+<div id="tweetPopup" class="tweet-popup">
+    <div class="popup-header">
+        <span class="close-btn" onclick="closeTweetPopup()">×</span>
+        <span class="drafts-link">Drafts</span>
+    </div>
+    <div class="popup-body">
+        <div class="popup-profile-pic" id="popupProfilePic"></div>
+        <div class="text-media-container">
+            
+            <textarea id="popupTweetInput" placeholder="What is happening?!" rows="3" ></textarea>
+            <div id="popupMediaPreview" class="popup-media-preview"></div>
+            <div class="reply-setting">Everyone can reply</div>
+            <div id="popupCharCounter">280</div>
+        </div>
+    </div>
+    <div class="popup-options">
+        <div class="popup-left-options">
+            
+            <div class="popup-tweet-icons">
+                <label for="popupMediaInput" class="icon"><i class="fas fa-image"></i></label>
+                <label class="icon"><i class="fas fa-map-marker-alt" onclick="getLocation()"></i></label>
+                <input type="file" id="popupMediaInput" accept="image/*,video/*" onchange="displayPopupMediaPreview(event)" style="display: none;">
+            </div>
+        </div>
+        
+
+        <button class="popup-tweet-button" onclick="postPopupTweet()">Post</button>
+    </div>
+</div>
+
+
+
+
+        <!-- Tweets Section -->
+        <div id="tweetFeed">
+            <!-- Tweets will appear here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <nav>
+            <a href="#">About</a>
+            <a href="#">Help Center</a>
+            <a href="#">Terms</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Cookies</a>
+            <a href="#">Ads Info</a>
+            <a href="#">More...</a>
+        </nav>
+        <p>&copy; 2024 X Clone</p>
+    </footer>
+    <button id="scrollToTop" onclick="scrollToTop()">⬆️</button>
+
+
+    <script src="tweet.js">
+
+
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (loggedInUser) {
+            const userData = JSON.parse(localStorage.getItem(loggedInUser.username));
+            if (userData) {
+                document.getElementById("tweetBoxProfilePic").style.backgroundImage = `url(${userData.profilePicture})`;
+            }
+        }
+        renderTweets();
+    });
+
+    function viewUserProfile(user) {
+        localStorage.setItem("selectedUserProfile", JSON.stringify(user));
+        window.location.href = "profile.html";
+    }
+
+
+
+    function displayPopupMediaPreview(event) {
+    const mediaPreview = document.getElementById('popupMediaPreview');
+    mediaPreview.innerHTML = ''; // Clear previous media
+    const files = event.target.files;
+
+    Array.from(files).forEach(file => {
+        const fileURL = URL.createObjectURL(file);
+        const mediaElement = document.createElement(file.type.startsWith("video") ? 'video' : 'img');
+        mediaElement.src = fileURL;
+        mediaElement.style.maxWidth = "100%";
+        mediaElement.style.maxHeight = "150px";
+        mediaElement.controls = file.type.startsWith("video");
+
+        const mediaContainer = document.createElement('div');
+        mediaContainer.className = 'media-container';
+        mediaContainer.style.position = 'relative';
+
+        const closeButton = document.createElement('div');
+        closeButton.className = 'media-close-btn';
+        closeButton.textContent = '×';
+        closeButton.onclick = () => mediaContainer.remove();
+
+        mediaContainer.appendChild(mediaElement);
+        mediaContainer.appendChild(closeButton);
+        mediaPreview.appendChild(mediaContainer);
+    });
+}
+
+
+
+
+
+
+
+
+
+        // Function to toggle the visibility of the "More" dropdown menu
+        function toggleMoreMenu(event) {
+            event.preventDefault(); // Prevent link default behavior
+            event.stopPropagation(); // Prevents event bubbling to other elements
+
+            const moreDropdown = document.getElementById("moreDropdown");
+            moreDropdown.style.display = (moreDropdown.style.display === "block") ? "none" : "block";
+            
+            // Close dropdown if clicking outside
+            document.addEventListener("click", function closeMenu(e) {
+                if (!moreDropdown.contains(e.target) && e.target !== event.currentTarget) {
+                    moreDropdown.style.display = "none";
+                    document.removeEventListener("click", closeMenu);
+                }
+            });
+        }
+
+// Logout function to confirm before logging out
+function logout() {
+    const confirmLogout = confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+        localStorage.removeItem("loggedInUser"); // Clear logged-in user data
+        window.location.href = "login.html"; // Redirect to login page
+    }
+}
+
+
+
+
+
+// Clear media preview for both main tweet box and popup
+function clearMediaPreview(previewId) {
+    const mediaPreview = document.getElementById(previewId);
+    mediaPreview.innerHTML = '';
+}
+
+
+
+
+function updateCharacterCount(inputId, counterId) {
+    const tweetInput = document.getElementById(inputId);
+    const charCounter = document.getElementById(counterId);
+    const maxChars = 280;
+
+    tweetInput.addEventListener("input", () => {
+        const charCount = tweetInput.value.length;
+
+        // If character count exceeds max, truncate and stop further input
+        if (charCount > maxChars) {
+            tweetInput.value = tweetInput.value.substring(0, maxChars);
+        }
+
+        // Update remaining characters and color if limit is reached
+        const remainingChars = maxChars - tweetInput.value.length;
+        charCounter.textContent = remainingChars;
+
+        if (remainingChars === 0) {
+            charCounter.classList.add("over-limit");
+        } else {
+            charCounter.classList.remove("over-limit");
+        }
+    });
+}
+
+// Initialize character counters on page load for both inputs
+document.addEventListener("DOMContentLoaded", () => {
+    updateCharacterCount("tweetInput", "charCounter");
+    updateCharacterCount("popupTweetInput", "popupCharCounter");
+});
+
+</script>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

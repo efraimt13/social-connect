@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SocialConnect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="x.png">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            color: #fff;
+        }
+
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 1100px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-section {
+            width: 50%;
+            padding: 50px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .auth-section form {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .auth-section input, .auth-section select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .auth-section input:focus, .auth-section select:focus {
+            border-color: #1a73e8;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 50px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #1a73e8;
+        }
+
+        .auth-section button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            background: #1a73e8;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .auth-section button:hover {
+            background: #1558b0;
+        }
+
+        #additional-fields {
+            display: none;
+        }
+
+        .date-of-birth {
+            display: flex;
+            gap: 10px;
+        }
+
+        .date-of-birth select {
+            flex: 1;
+        }
+
+        .gender-options {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.gender-options input[type="radio"] {
+    display: none;
+}
+
+.gender-options label {
+    flex: 1;
+    text-align: center;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #f9f9f9;
+    color: #333;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.gender-options label:hover {
+    background: #e0f0ff;
+    border-color: #1a73e8;
+    color: #1a73e8;
+}
+
+.gender-options input[type="radio"]:checked + label {
+    background: #1a73e8;
+    color: #fff;
+    border-color: #1a73e8;
+    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.5);
+}
+
+
+        .toggle-link {
+            margin-top: 15px;
+            text-align: center;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .toggle-link span {
+            color: #1a73e8;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .info-section {
+            width: 50%;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 50px 30px;
+        }
+
+        .info-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .info-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .loading-bar {
+            margin-top: 15px;
+            width: 100%;
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .loading-progress {
+    height: 100%;
+    width: 0; /* Starts from 0 */
+    background: #1a73e8;
+    animation: loading 2s linear forwards; /* Ensure `forwards` is used to retain the final state */
+}
+
+
+        @keyframes loading {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .info-section {
+                display: none;
+            }
+
+            .auth-section {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-section">
+            <h2 id="auth-title">Log in</h2>
+            <form id="auth-form" onsubmit="handleAuth(event)">
+                <input type="text" id="username" placeholder="Username" required>
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility()"></i>
+                </div>
+                
+                <div id="additional-fields">
+                    <div class="date-of-birth">
+                        <select id="day">
+                            <option value="" disabled selected>Day</option>
+                        </select>
+                        <select id="month">
+                            <option value="" disabled selected>Month</option>
+                        </select>
+                        <select id="year">
+                            <option value="" disabled selected>Year</option>
+                        </select>
+                    </div>
+                    <div class="gender-options">
+                        <input type="radio" id="male" name="gender" value="Male">
+                        <label for="male">Male</label>
+                        <input type="radio" id="female" name="gender" value="Female">
+                        <label for="female">Female</label>
+                    </div>
+                </div>
+                
+
+                <button type="submit">Log in</button>
+                <div class="loading-bar" id="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+            </form>
+            <p class="toggle-link" id="toggle-auth" onclick="toggleAuthMode()">Don't have an account? <span>Sign up</span></p>
+        </div>
+
+        <div class="info-section">
+            <h1>Welcome to SocialConnect</h1>
+            <p>Join the best platform to connect with friends, share your moments, and explore the world around you. Log in or sign up to get started!</p>
+        </div>
+    </div>
+
+    <script>
+        let isLoginMode = true;
+
+        function populateDropdowns() {
+            const daySelect = document.getElementById("day");
+            const monthSelect = document.getElementById("month");
+            const yearSelect = document.getElementById("year");
+
+            for (let i = 1; i <= 31; i++) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.textContent = i;
+                daySelect.appendChild(option);
+            }
+
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            months.forEach((month, index) => {
+                const option = document.createElement("option");
+                option.value = index + 1;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            });
+
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= currentYear - 100; i--) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.textContent = i;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+    document.getElementById("auth-title").textContent = isLoginMode ? "Log in" : "Sign up";
+    document.querySelector(".auth-section button").textContent = isLoginMode ? "Log in" : "Sign up";
+    document.getElementById("additional-fields").style.display = isLoginMode ? "none" : "block";
+    document.getElementById("toggle-auth").innerHTML = isLoginMode
+        ? "Don't have an account? <span>Sign up</span>"
+        : "Already have an account? <span>Log in</span>";
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+
+    // Add or remove 'required' dynamically
+    const additionalFields = document.getElementById("additional-fields");
+    const day = document.getElementById("day");
+    const month = document.getElementById("month");
+    const year = document.getElementById("year");
+    const genderInputs = document.querySelectorAll('input[name="gender"]');
+
+    if (!isLoginMode) {
+        day.setAttribute("required", "required");
+        month.setAttribute("required", "required");
+        year.setAttribute("required", "required");
+        genderInputs.forEach(input => input.setAttribute("required", "required"));
+    } else {
+        day.removeAttribute("required");
+        month.removeAttribute("required");
+        year.removeAttribute("required");
+        genderInputs.forEach(input => input.removeAttribute("required"));
+    }
+}
+
+
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.querySelector(".toggle-password");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+
+        function handleAuth(event) {
+    event.preventDefault(); // Prevent form from reloading the page
+    console.log("handleAuth triggered"); // Debugging log
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    console.log("Entered username:", username); // Debugging log
+    console.log("Entered password:", password); // Debugging log
+
+    if (!username || !password) {
+        alert("Please enter both username and password.");
+        return;
+    }
+
+    const hashedPassword = CryptoJS.SHA256(password).toString();
+    console.log("Hashed password:", hashedPassword); // Debugging log
+
+    const loadingBar = document.getElementById("loading-bar");
+console.log("Loading bar element:", loadingBar); // Debugging log
+loadingBar.style.display = "block";
+console.log("Loading bar should now be visible.");
+
+
+
+
+    // Retrieve users array from localStorage
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    console.log("Retrieved users from localStorage:", users); // Debugging log
+
+    setTimeout(() => {
+        loadingBar.style.display = "none";
+
+        if (isLoginMode) {
+            console.log("Attempting to log in..."); // Debugging log
+            // Check for a matching user
+            const user = users.find(
+                (u) => u.username === username && u.password === hashedPassword
+            );
+
+            if (user) {
+                console.log("Login successful for user:", user); // Debugging log
+                // Store the logged-in user in localStorage
+                localStorage.setItem("loggedInUser", JSON.stringify(user));
+                window.location.href = "sample.html"; // Redirect to the home page
+            } else {
+                console.error("Login failed: Incorrect username or password"); // Debugging log
+                alert("Incorrect username or password. Please try again.");
+            }
+        } else {
+            console.log("Attempting to sign up..."); // Debugging log
+
+            // Sign-Up Mode: Check if username already exists
+            const existingUser = users.find((u) => u.username === username);
+            if (existingUser) {
+                alert("Username already exists. Please log in instead.");
+                return;
+            }
+
+            // Collect additional sign-up data
+            const day = parseInt(document.getElementById("day").value, 10);
+            const month = parseInt(document.getElementById("month").value, 10);
+            const year = parseInt(document.getElementById("year").value, 10);
+
+            if (!isAtLeast13YearsOld(day, month, year)) {
+                alert("You must be at least 13 years old to sign up.");
+                return;
+            }
+
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+
+            // Create new user object
+            const newUser = {
+                username,
+                password: hashedPassword,
+                profilePicture: "default-pic.jpg",
+                coverPhoto: "cover-default.jpg",
+                displayName: username,
+                handle: `@${username}`,
+                bio: "This is my bio.",
+                joinDate: new Date().toLocaleDateString(),
+                followers: 0,
+                following: 0,
+                followingList: [],
+                tweets: [],
+                birthday: { day, month, year },
+                gender,
+            };
+
+            // Add new user to the users array and update localStorage
+            users.push(newUser);
+            localStorage.setItem("users", JSON.stringify(users));
+            localStorage.setItem("loggedInUser", JSON.stringify(newUser));
+
+            console.log("Sign-up successful. Redirecting..."); // Debugging log
+            window.location.href = "sample.html"; // Redirect to the home page
+        }
+    }, 2000);
+}
+
+
+
+
+
+
+        document.addEventListener("DOMContentLoaded", populateDropdowns);
+
+
+        function isStrongPassword(password) {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /[0-9]/.test(password);
+    const hasSpecialChars = /[@#$%^&*!]/.test(password);
+
+    return (
+        password.length >= minLength &&
+        hasUpperCase &&
+        hasLowerCase &&
+        hasNumbers &&
+        hasSpecialChars
+    );
+}
+
+
+function isAtLeast13YearsOld(day, month, year) {
+    const birthDate = new Date(year, month - 1, day); // JS months are 0-indexed
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const isBirthdayPassed =
+        today.getMonth() > birthDate.getMonth() ||
+        (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+
+    return age > 13 || (age === 13 && isBirthdayPassed);
+}
+
+
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="x.png">
+    <style>
+        /* Ensure modal is hidden by default */
+#editProfileModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+/* Style the custom file button */
+input[type="file"] {
+    display: none;
+}
+
+label[for="profilePicInput"],
+label[for="coverPhotoInput"] {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1a73e8;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+label[for="profilePicInput"]:hover,
+label[for="coverPhotoInput"]:hover {
+    background: #1558b0;
+}
+
+/* Style preview containers for better appearance */
+.preview-container {
+    margin-top: 10px;
+    text-align: center;
+}
+
+    </style>
+</head>
+<body >
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2><img src="logo.png" alt="Logo" class="logo" onclick="window.location.href='sample.html'"></h2>
+    <nav>
+        <a href="sample.html"><i class="fas fa-home"></i> <span>Home</span></a>
+        <a href="#"><i class="fas fa-search"></i> <span>Explore</span></a>
+        <a href="#"><i class="fas fa-bell"></i> <span>Notifications</span></a>
+        <a href="message.html"><i class="fas fa-envelope"></i> <span>Messages</span></a>
+        <a href="#"><i class="fas fa-bookmark"></i> <span>Bookmarks</span></a>
+        <a href="#"><i class="fas fa-list"></i> <span>Lists</span></a>
+        <a href="profile.html" class="active"><i class="fas fa-user"></i> <span>Profile</span></a>
+        <div class="more-container">
+            <a href="#" class="more-button" onclick="toggleMoreMenu(event)">
+                <i class="fas fa-ellipsis-h"></i> <span>More</span>
+            </a>
+            <!-- Dropdown Menu -->
+            <div class="mmore-dropdown" id="moreDropdown">
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+    <button class="button">Post</button>
+</div>
+
+<!-- Profile Main Content -->
+<div class="profile-content">
+    <!-- Banner and Profile Picture -->
+    <div class="profile-header">
+        <img id="coverPhoto" src="cover-default.jpg" alt="Cover Photo" class="cover-image">
+        <div class="profile-picture-container">
+            <img id="profilePicture" src="default-pic.jpg" alt="Profile Picture" class="profile-picture">
+        </div>
+        <button class="edit-profile-button" onclick="openEditProfileModal()">Edit Profile</button>
+    </div>
+
+    <!-- Profile Information -->
+    <div class="profile-info">
+        <h1 id="displayName">Username</h1>
+        <p id="handle">@userhandle</p>
+        <p id="bio" class="bio">User's bio goes here.</p>
+        <p><i class="fas fa-calendar-alt"></i> <span id="joinDate">Joined Date</span></p>
+    </div>
+
+    <!-- Follower Stats -->
+    <div class="follower-stats">
+        <span><span id="followingCount">0</span> Following</span>
+        <span><span id="followersCount">0</span> Followers</span>
+    </div>
+
+    <!-- Profile Navigation Tabs -->
+    <div class="profile-nav">
+        <a href="#" class="active" onclick="showSection('posts')">Posts</a>
+        <a href="#" onclick="showSection('replies')">Replies</a>
+        <a href="#" onclick="showSection('highlights')">Highlights</a>
+        <a href="#" onclick="showSection('media')">Media</a>
+    </div>
+
+    <!-- Profile Content Sections -->
+    <div id="posts-section" class="section active">
+        <div id="tweetFeed">User's tweets will display here...</div>
+    </div>
+    <div id="replies-section" class="section">User's Replies...</div>
+    <div id="highlights-section" class="section">User's Highlights...</div>
+    <div id="media-section" class="section media-grid">
+        <!-- Media content -->
+    </div>
+</div>
+
+<!-- Trending Sidebar -->
+<div class="trending-sidebar">
+    <div class="search-bar-container">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search" oninput="showUserSuggestions()">
+        </div>
+        <div class="suggestions-card" id="suggestionsCard"></div>
+    </div>
+
+    <!-- Trending Section -->
+    <div class="trending-section">
+        <h3>Trends for you <button onclick="refreshTrends()">🔄</button></h3>
+        <div class="trend">
+            <span class="trend-category">Trending in Tech</span>
+            <h4>#WebDevelopment</h4>
+            <p>54.7k Tweets</p>
+        </div>
+    </div>
+
+    <!-- Who to Follow Section -->
+    <div class="who-to-follow">
+        <h3>Who to follow</h3>
+        <div class="follow-suggestion">
+            <span class="username">User1</span>
+            <span class="handle">@user1</span>
+            <button class="follow-button" onclick="toggleFollow('user1', this)">Follow</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<!-- Edit Profile Modal -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditProfileModal()">&times;</span>
+        <h2>Edit Profile</h2>
+        <form id="editProfileForm" onsubmit="saveProfile(event)">
+            <div class="input-group">
+                <label for="profilePicInput">Choose Profile Picture</label>
+                <input type="file" id="profilePicInput" accept="image/*" onchange="previewImage(event, 'profilePicturePreview')">
+                <div class="preview-container">
+                    <img id="profilePicturePreview" class="preview-image" src="default-pic.jpg" alt="Profile Picture Preview">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="coverPhotoInput">Choose Cover Photo</label>
+                <input type="file" id="coverPhotoInput" accept="image/*" onchange="previewImage(event, 'coverPhotoPreview')">
+                <div class="preview-container">
+                    <img id="coverPhotoPreview" class="preview-cover" src="cover-default.jpg" alt="Cover Photo Preview">
+                </div>
+            </div>
+            
+
+            <div class="input-group">
+                <label for="bioInput">Bio</label>
+                <textarea id="bioInput" rows="3" placeholder="Write a short bio..."></textarea>
+            </div>
+
+            <button type="submit" class="save-profile-button">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+
+<script src="tweet.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        loadProfileData();
+        renderTweetsForUser();
+        updatePageTitle();
+    });
+// Function to update the page title with the user's username
+function updatePageTitle() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!loggedInUser) return;
+    document.title = `Profile / ${loggedInUser.username}`;
+}
+    // Function to load profile data from localStorage and display it on the profile page
+    function loadProfileData() {
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (!loggedInUser) return;
+
+        const userData = JSON.parse(localStorage.getItem(loggedInUser.username));
+        if (userData) {
+            document.getElementById("profilePicture").src = userData.profilePicture || "default-pic.jpg";
+            document.getElementById("coverPhoto").src = userData.coverPhoto || "cover-default.jpg";
+            document.getElementById("displayName").textContent = userData.displayName || "Username";
+            document.getElementById("handle").textContent = userData.handle || "@userhandle";
+            document.getElementById("bio").textContent = userData.bio || "User's bio goes here.";
+            document.getElementById("joinDate").textContent = userData.joinDate || "Joined Date";
+            document.getElementById("followingCount").textContent = userData.following || 0;
+            document.getElementById("followersCount").textContent = userData.followers || 0;
+        }
+    }
+
+    // Function to save profile updates to localStorage and sync with users array
+    function saveProfile(event) {
+    event.preventDefault();
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!loggedInUser) return;
+
+    // Fetch or create `userData` from localStorage
+    let userData = JSON.parse(localStorage.getItem(loggedInUser.username)) || {};
+    userData.bio = document.getElementById("bioInput").value;
+    userData.displayName = loggedInUser.displayName;
+    userData.handle = loggedInUser.handle;
+
+    // Handle profile picture upload
+    const profilePicInput = document.getElementById("profilePicInput").files[0];
+    if (profilePicInput) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            userData.profilePicture = reader.result;
+            localStorage.setItem(loggedInUser.username, JSON.stringify(userData));
+            syncWithUsersArray(loggedInUser.username, userData); // Sync with users array
+            loadProfileData(); // Reload profile to show updated picture
+        };
+        reader.readAsDataURL(profilePicInput);
+    } else if (!userData.profilePicture) {
+        userData.profilePicture = "default-pic.jpg";
+    }
+
+    const coverPhotoInput = document.getElementById("coverPhotoInput").files[0];
+    if (coverPhotoInput) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            userData.coverPhoto = reader.result;
+            localStorage.setItem(loggedInUser.username, JSON.stringify(userData));
+            syncWithUsersArray(loggedInUser.username, userData);
+            loadProfileData();
+        };
+        reader.readAsDataURL(coverPhotoInput);
+    } else if (!userData.coverPhoto) {
+        userData.coverPhoto = "cover-default.jpg";
+    }
+
+    // Save updated user data to local storage
+    localStorage.setItem(loggedInUser.username, JSON.stringify(userData));
+    syncWithUsersArray(loggedInUser.username, userData); // Ensure updates are reflected in the users array
+    closeEditProfileModal();
+    loadProfileData();
+}
+
+// Sync user data with the main users array
+function syncWithUsersArray(username, updatedData) {
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const userIndex = users.findIndex(user => user.username === username);
+
+    if (userIndex !== -1) {
+        // Update the existing user data
+        users[userIndex] = { ...users[userIndex], ...updatedData };
+    } else {
+        // Add a new entry if the user does not exist
+        users.push(updatedData);
+    }
+
+    localStorage.setItem("users", JSON.stringify(users));
+}
+
+
+
+// Open the Edit Profile modal and preload current profile information
+function openEditProfileModal() {
+    const modal = document.getElementById("editProfileModal");
+    modal.style.display = "flex";
+
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const userData = JSON.parse(localStorage.getItem(loggedInUser.username));
+
+    if (userData) {
+        document.getElementById("bioInput").value = userData.bio || "";
+        document.getElementById("profilePicturePreview").src = userData.profilePicture || "default-pic.jpg";
+        document.getElementById("coverPhotoPreview").src = userData.coverPhoto || "cover-default.jpg";
+    }
+}
+
+    // Closes the Edit Profile modal
+    function closeEditProfileModal() {
+        document.getElementById("editProfileModal").style.display = "none";
+    }
+
+    // Function to preview selected profile or cover image in the modal
+    function previewImage(event, previewId) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                document.getElementById(previewId).src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Sample function to render user's tweets, assuming tweets are stored in localStorage
+    function renderTweetsForUser() {
+    const tweetFeed = document.getElementById('tweetFeed');
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const tweets = JSON.parse(localStorage.getItem("tweets")) || [];
+
+    tweetFeed.innerHTML = ''; // Clear existing tweets
+
+    tweets
+        .filter(tweet => tweet.handle === loggedInUser.handle) // Only show tweets from the logged-in user
+        .forEach(tweet => {
+            const tweetElement = document.createElement('div');
+            tweetElement.className = 'tweet';
+
+            tweetElement.innerHTML = `
+                <div class="tweet-header">
+                    <div class="profile-pic" style="background-image: url('${tweet.profilePicture}')"></div>
+                    <div>
+                        <span class="username">${tweet.userName}</span>
+                        <span class="handle">${tweet.handle}</span>
+                        <span class="timestamp">${new Date(tweet.timestamp).toLocaleString()}</span>
+                    </div>
+                </div>
+                <div class="tweet-content">${tweet.content}</div>
+                <div class="tweet-actions">
+                    <button 
+                        class="${tweet.likesBy?.includes(loggedInUser?.handle) ? "liked" : ""}" 
+                        onclick="likeTweet('${tweet.timestamp}')">
+                        <i class="fas fa-heart"></i> <span>${tweet.likes || 0}</span>
+                    </button>
+                    <button 
+                        class="${tweet.retweetsBy?.includes(loggedInUser?.handle) ? "retweeted" : ""}" 
+                        onclick="retweet('${tweet.timestamp}')">
+                        <i class="fas fa-retweet"></i> <span>${tweet.retweets || 0}</span>
+                    </button>
+                    <button onclick="showComments('${tweet.timestamp}')">
+                        <i class="fas fa-comment"></i> <span>${tweet.comments?.length || 0}</span>
+                    </button>
+                </div>
+            `;
+            tweetFeed.appendChild(tweetElement);
+        });
+}
+
+
+    // Sample function to toggle the "More" menu in the sidebar
+    function toggleMoreMenu(event) {
+        event.preventDefault(); 
+        event.stopPropagation();
+
+        const moreDropdown = document.getElementById("moreDropdown");
+        moreDropdown.style.display = (moreDropdown.style.display === "block") ? "none" : "block";
+
+        document.addEventListener("click", function closeMenu(e) {
+            if (!moreDropdown.contains(e.target) && e.target !== event.currentTarget) {
+                moreDropdown.style.display = "none";
+                document.removeEventListener("click", closeMenu);
+            }
+        });
+    }
+
+    // Logout function to confirm and redirect to login page
+    function logout() {
+        const confirmLogout = confirm("Are you sure you want to log out?");
+        if (confirmLogout) {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+        }
+    }
+</script>
+
+
+
+</body>
+</html>
