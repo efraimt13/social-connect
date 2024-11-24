@@ -188,7 +188,28 @@ label[for="coverPhotoInput"]:hover {
         </form>
     </div>
 </div>
-
+<div class="bottom-nav">
+    <a href="sample.html" class="nav-item">
+        <i class="fas fa-home"></i>
+        <span></span>
+    </a>
+    <a href="#" class="nav-item">
+        <i class="fas fa-search"></i>
+        <span></span>
+    </a>
+    <a href="message.html" class="nav-item">
+        <i class="fas fa-envelope"></i>
+        <span></span>
+    </a>
+    <a href="#" class="nav-item">
+        <i class="fas fa-bell"></i>
+        <span></span>
+    </a>
+    <a href="profile.html" class="nav-item">
+        <i class="fas fa-user"></i>
+        <span></span>
+    </a>
+</div>
 
 <script src="tweet.js"></script>
 <script>
@@ -385,7 +406,7 @@ function openEditProfileModal() {
         const confirmLogout = confirm("Are you sure you want to log out?");
         if (confirmLogout) {
             localStorage.removeItem("loggedInUser");
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         }
     }
 </script>
