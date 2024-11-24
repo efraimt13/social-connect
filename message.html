@@ -56,13 +56,22 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            overflow-y: scroll; /* Enables vertical scrolling */
+    -ms-overflow-style: none; /* Internet Explorer and Edge */
+    scrollbar-width: none; /* Firefox */
         }
+        .chat-messages::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
 
- .message {
-    display: block; /* Removed flex for alignment */
+.message {
+    position: relative; /* Ensure relative positioning for absolute child elements */
+    display: flex;
+    align-items: center;
     word-wrap: break-word;
     overflow-wrap: break-word;
     font-size: 1em;
+    padding-right: 40px; /* Space for the options icon */
 }
 
 /* Sent Message - Right-Aligned */
@@ -209,7 +218,7 @@
     #searchUsers {
     border-radius: 15px;
     height: 35px;
-    width: 144%;
+    width: 100%;
     padding: 10px;
     border: 1px solid #38444d;
     background-color: #1a1c21;
@@ -228,7 +237,7 @@
     cursor: pointer;
     transition: background-color 0.3s;
     text-align: center;
-    width: 144%;
+    width: 100%;
     margin-bottom: 20px;
     border: none;
 }
@@ -250,7 +259,7 @@
     .chat-content.active {
         display: flex;
         flex-direction: column;
-        width: 85%;
+        width: 100%;
     }
 
     .chats-list.hidden {
@@ -298,7 +307,290 @@
     margin-right: 10px;
     
 }
+.message-options {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #888;
+    z-index: 1;
+}
 
+.message-options:hover {
+    color: #1da1f2;
+}
+
+/* Options Menu Styling */
+.options-menu {
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    background-color: #222; /* Slightly lighter for better contrast */
+    border-radius: 12px; /* Rounded corners for a polished look */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
+    display: none;
+    z-index: 10;
+    padding: 8px 0; /* Padding around buttons for breathing room */
+    width:100px; /* Consistent width for all menus */
+    transition: opacity 0.3s ease-in-out; /* Smooth appearance transition */
+    opacity: 0;
+    transform: translateY(-10px); /* Subtle slide-down effect */
+    visibility: hidden;
+}
+
+.options-menu.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.options-menu button {
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em; /* Slightly larger for readability */
+    padding: 4px 8px; /* Comfortable button padding */
+    text-align: left;
+    width: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+    border-radius: 6px; /* Rounded button edges */
+}
+
+.options-menu button:hover {
+    background-color: #222;
+    color: #ffffff;
+     /* Subtle zoom effect */
+}
+
+
+.fa-ellipsis-v {
+    font-size: 0.9em; /* Slightly larger for visibility */
+    color: #bbb; /* Soft gray for a neutral look */
+    cursor: pointer; /* Indicates interactivity */
+    transition: color 0.3s ease, transform 0.2s ease; /* Smooth hover and click effects */
+}
+
+.options-menu {
+    display: none; /* Hidden by default */
+}
+
+
+
+
+
+
+
+
+
+/* General Styling for Mobile */
+@media (max-width: 768px) {
+    /* Hide Sidebar on Mobile */
+    .sidebar {
+        display: none;
+    }
+
+    /* Main Content Adjustments */
+    .messages-container {
+        margin: 0;
+        width: 100%;
+        height: calc(100vh - 60px); /* Adjust for bottom navigation */
+        display: flex;
+        flex-direction: column;
+        background-color: #000;
+        margin-bottom: 100px;
+    }
+
+    .chat-content {
+        display: none; /* Hide by default */
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* Chat Content Active */
+    .chat-content.active {
+        display: flex;
+    }
+
+    /* Chat List for Mobile */
+    .chats-list {
+        width: 100%;
+        max-width: 100%;
+        padding: 15px;
+        background-color: #000;
+        border-right: none;
+    }
+
+    /* Back Button */
+    .back-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #1da1f2;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1em;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .back-button i {
+        font-size: 1.2em;
+    }
+
+    .back-button:hover {
+        color: #0d8bd7;
+    }
+
+    /* Chat List Hidden on Message View */
+    .chats-list.hidden {
+        display: none;
+    }
+
+    /* Chat Messages Adjustments */
+    .chat-messages {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 15px;
+        padding-bottom: 100px; /* Space for input and navigation */
+        align-items: center; 
+        flex-direction: column;
+    }
+
+    /* Message Input Fixed at Bottom */
+    .message-input {
+    position: fixed;
+    bottom: 40px; /* Space for bottom navigation */
+    left: 0;
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #000;
+    border-top: 1px solid #38444d;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+    .message-input input[type="text"] {
+        flex-grow: 1;
+        padding: 10px;
+        border-radius: 20px;
+        border: 1px solid #38444d;
+        background-color: #1a1c21;
+        color: #fff;
+        outline: none;
+    }
+
+    .message-input button {
+        background-color: #1da1f2;
+        color: #fff;
+        border-radius: 20px;
+        border: none;
+        padding: 8px 15px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .message-input button:hover {
+        background-color: #0d8bd7;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #000;
+        border-top: 1px solid #38444d;
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px 0;
+        z-index: 10;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .bottom-nav .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #8899a6;
+        font-size: 1em;
+        transition: color 0.3s;
+    }
+
+    .bottom-nav .nav-item i {
+        font-size: 1.5em;
+    }
+
+    .bottom-nav .nav-item:hover {
+        color: #1da1f2;
+    }
+
+    /* Chat Media Preview */
+    .chat-media {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+
+    #mediaPreviewContainer {
+    margin-top: 10px;
+    position: relative;
+    z-index: 5; /* Ensure it's above .chat-messages */
+    background-color: #1a1c21;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+    #mediaPreviewContainer img,
+    #mediaPreviewContainer video {
+        max-width: 70%;
+        max-height: 150px;
+        border-radius: 8px;
+    }
+
+    #mediaPreviewContainer button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+}
+
+/* Larger Screens (Desktop) */
+@media (min-width: 769px) {
+    .bottom-nav {
+        display: none;
+    }
+
+    .chats-list {
+        width: 30%;
+    }
+
+    .chat-content {
+        display: flex;
+        width: 70%;
+    }
+}
 
     </style>
 </head>
@@ -363,7 +655,7 @@
         <button onclick="sendMessage()">Send</button>
     </div>
     <div id="mediaPreviewContainer" style="display: none; position: relative; margin-top: 10px;">
-        <img id="mediaPreview" src="" alt="Preview" class="chat-media">
+        <div id="mediaPreview"></div>
         <button onclick="removeMedia()" style="
             position: absolute;
             top: -10px;
@@ -381,79 +673,147 @@
     </div>
     
     
+    
 </div>
 
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            loadChatList();
-        });
-
-        function loadChatList() {
-            const chatListContainer = document.getElementById("chatListContainer");
-            const user = users.find(u => u.username === user.username);
-
-            const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
-            chatListContainer.innerHTML = '';
-            users.forEach(user => {
-                if (user.username !== currentUser.username) {
-                    const chatElement = document.createElement("div");
-                    chatElement.className = "chat";
-                    chatElement.textContent = user.displayName;
-                    chatElement.onclick = () => loadChat(user);
-                    chatListContainer.appendChild(chatElement);
-                }
-            });
+ 
+    <div class="bottom-nav">
+        <a href="sample.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span></span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-search"></i>
+            <span></span>
+        </a>
+        <a href="message.html" class="nav-item">
+            <i class="fas fa-envelope"></i>
+            <span></span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-bell"></i>
+            <span></span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span></span>
+        </a>
+    </div>
+   <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        loadChatList(); // Load chat list on page load
+        const selectedChatUser = JSON.parse(localStorage.getItem("selectedChatUser"));
+        if (selectedChatUser) {
+            loadChat(selectedChatUser); // Automatically load the selected chat
+        } else {
+            document.title = "Messages"; // Set default title
         }
-        function loadChat(user) {
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    });
+    
+    // Function to load the chat list
+    function loadChatList() {
+    const chatListContainer = document.getElementById("chatListContainer");
     const chats = JSON.parse(localStorage.getItem("chats")) || {};
-    const chatKey = [loggedInUser.username, user.username].sort().join("-");
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const addedUsers = new Set(); // Track users already added to the chat list
 
-    const messages = chats[chatKey] || [];
+    chatListContainer.innerHTML = ""; // Clear current chat list
 
-    // Display messages
-    const chatMessages = document.getElementById("chatMessages");
-    chatMessages.innerHTML = messages.map(msg => `
-        <div class="${msg.sender === loggedInUser.username ? 'sent' : 'received'}">
-            ${msg.content}
-        </div>
-    `).join("");
+    // Iterate over chat keys to populate the chat list
+    Object.keys(chats).forEach(chatKey => {
+        const participants = chatKey.split("-");
+        const otherUsername = participants.find(username => username !== loggedInUser.username);
+        if (addedUsers.has(otherUsername)) return; // Skip if user is already added
 
-    // Save the selected chat for reference
-    localStorage.setItem("selectedChatUser", JSON.stringify(user));
+        const user = users.find(u => u.username === otherUsername);
+        if (user) {
+            addedUsers.add(otherUsername); // Mark this user as added
+            const chatElement = document.createElement("div");
+            chatElement.className = "chat";
+            chatElement.textContent = user.displayName;
+            chatElement.onclick = () => loadChat(user);
+            chatListContainer.appendChild(chatElement);
+        }
+    });
+
+    if (!chatListContainer.innerHTML) {
+        chatListContainer.innerHTML = "<p>No active chats. Start a new conversation!</p>";
+    }
 }
 
+    
+    // Function to load a chat
+    function loadChat(user) {
+        // Update page title
+        document.title = `Messages / ${user.displayName}`;
+    
+        // Update chat header
+        document.getElementById("chatUsername").textContent = user.displayName;
+        document.getElementById("chatUserAvatar").src = user.profilePicture || "default-pic.jpg";
+    
+        // Load messages
+        const chatMessages = document.getElementById("chatMessages");
+        chatMessages.innerHTML = "";
+    
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        const chatData = JSON.parse(localStorage.getItem("chats")) || {};
+        const chatKey = getChatKey(user.username);
+        const messages = chatData[chatKey] || [];
+    
+        messages.forEach((message, index) => displayMessage(message, index, chatKey));
 
-
-        function getChatKey(otherUsername) {
-            const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
-            return [currentUser.username, otherUsername].sort().join("-");
-        }
-
-// Update the displayMessage function to handle media
-function displayMessage(message) {
+        scrollToBottom();
+    
+        // Save the selected chat user
+        localStorage.setItem("selectedChatUser", JSON.stringify(user));
+    
+        // For mobile view, toggle visibility of chat content
+        document.getElementById("chatList").classList.add("hidden");
+        document.getElementById("chatContent").classList.add("active");
+    }
+    
+    // Function to save messages in localStorage
+    function saveMessage(chatKey, message) {
+        const chatData = JSON.parse(localStorage.getItem("chats")) || {};
+        if (!chatData[chatKey]) chatData[chatKey] = [];
+        chatData[chatKey].push(message);
+        localStorage.setItem("chats", JSON.stringify(chatData));
+    
+        loadChatList(); // Reload chat list to include new chat
+    }
+    
+    // Function to display a message in the chat
+    function displayMessage(message, index, chatKey) {
     const chatMessages = document.getElementById("chatMessages");
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     const isSent = message.sender === loggedInUser.username;
 
     const messageElement = document.createElement("div");
-    messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
+    messageElement.className = `message ${isSent ? "sent" : "received"}`;
 
-    if (message.type === 'media' && message.media) {
-        // If the message contains media, display it
-        messageElement.innerHTML = `
-            <div class="message-content">${message.content || ""}</div>
-            <img src="${message.media}" alt="Media" class="chat-media">
-        `;
-    } else {
-        // Display text-only message
-        messageElement.innerHTML = `
-            <div class="message-content">${message.content}</div>
-        `;
+    let mediaContent = "";
+    if (message.type === "media" && message.media) {
+        if (message.media.type.startsWith("image/")) {
+            mediaContent = `<img src="${message.media.src}" alt="Image" class="chat-media">`;
+        } else if (message.media.type.startsWith("video/")) {
+            mediaContent = `<video controls class="chat-media">
+                                <source src="${message.media.src}" type="${message.media.type}">
+                                Your browser does not support the video tag.
+                            </video>`;
+        }
     }
+
+    messageElement.innerHTML = `
+        ${mediaContent || `<div class="message-content">${message.content}</div>`}
+        <div class="message-options">
+            <i class="fas fa-ellipsis-v" onclick="toggleOptions(${index})"></i>
+            <div class="options-menu" id="options-${index}">
+                <button onclick="deleteMessage('${chatKey}', ${index})">Delete</button>
+            </div>
+        </div>
+    `;
 
     chatMessages.appendChild(messageElement);
     scrollToBottom();
@@ -461,160 +821,164 @@ function displayMessage(message) {
 
 
 
-let selectedMedia = null; // Store the selected media
 
-// Trigger the file input
-function triggerMediaUpload() {
-    document.getElementById("mediaInput").click();
-}
-
-// Preview the selected media
-function previewMedia(event) {
+    
+    // Function to scroll to the bottom of the chat
+    function scrollToBottom() {
+        const chatMessages = document.getElementById("chatMessages");
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Update page title when returning to the chat list
+    function showChatList() {
+        document.title = "Messages";
+        document.getElementById("chatList").classList.remove("hidden");
+        document.getElementById("chatContent").classList.remove("active");
+    }
+    
+    // Triggered when sending a message
+    function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const messageContent = messageInput.value.trim();
+    
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        const selectedChatUser = JSON.parse(localStorage.getItem("selectedChatUser"));
+        if (!selectedChatUser || (!messageContent && !selectedMedia)) return;
+    
+        const message = {
+        sender: loggedInUser.username,
+        receiver: selectedChatUser.username,
+        content: messageContent,
+        media: selectedMedia, // Include media if selected
+        type: selectedMedia ? "media" : "text", // Distinguish media messages
+        timestamp: Date.now(),
+    };
+    
+        const chatKey = getChatKey(selectedChatUser.username);
+        saveMessage(chatKey, message);
+        displayMessage(message);
+    
+        messageInput.value = ""; // Clear the input field
+        removeMedia(); // Clear media preview
+    }
+    
+    // Utility function to generate a unique chat key
+    function getChatKey(otherUsername) {
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        return [loggedInUser.username, otherUsername].sort().join("-");
+    }
+    
+    // Media handling
+    let selectedMedia = null;
+    let selectedMediaType = null;
+    
+    function triggerMediaUpload() {
+        document.getElementById("mediaInput").click();
+    }
+    
+    function previewMedia(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = () => {
-            selectedMedia = reader.result; // Store the base64-encoded media
+            selectedMedia = { src: reader.result, type: file.type }; // Store media type and source
             const mediaPreviewContainer = document.getElementById("mediaPreviewContainer");
             const mediaPreview = document.getElementById("mediaPreview");
-            mediaPreview.src = reader.result;
+
+            if (file.type.startsWith("image/")) {
+                mediaPreview.innerHTML = `<img src="${reader.result}" alt="Preview" class="chat-media">`;
+            } else if (file.type.startsWith("video/")) {
+                mediaPreview.innerHTML = `<video controls class="chat-media">
+                                              <source src="${reader.result}" type="${file.type}">
+                                              Your browser does not support the video tag.
+                                          </video>`;
+            }
+
             mediaPreviewContainer.style.display = "block";
         };
         reader.readAsDataURL(file);
     }
 }
-// Remove the selected media
+
+
+    
 function removeMedia() {
     selectedMedia = null;
     document.getElementById("mediaPreviewContainer").style.display = "none";
     document.getElementById("mediaInput").value = ""; // Reset the file input
 }
 
-// Update sendMessage function to handle media
-function sendMessage() {
-    const messageInput = document.getElementById("messageInput");
-    const messageContent = messageInput.value.trim();
-
-    if (!messageContent && !selectedMedia) return; // Ensure either text or media is sent
-
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    const selectedChatUser = JSON.parse(localStorage.getItem("selectedChatUser"));
-
-    const newMessage = {
-        id: Date.now(),
-        sender: loggedInUser.username,
-        receiver: selectedChatUser.username,
-        content: messageContent,
-        media: selectedMedia, // Include media if present
-        type: selectedMedia ? 'media' : 'text',
-    };
-
-    const chatKey = getChatKey(selectedChatUser.username);
-    saveMessage(chatKey, newMessage);
-    displayMessage(newMessage);
-
-    // Reset input fields
-    messageInput.value = "";
-    removeMedia(); // Reset the media preview
-    scrollToBottom();
-}
-
-
-function saveMessage(chatKey, message) {
-    const chatData = JSON.parse(localStorage.getItem("chats")) || {};
-    if (!chatData[chatKey]) chatData[chatKey] = [];
-    chatData[chatKey].push(message);
-    localStorage.setItem("chats", JSON.stringify(chatData));
-}
-
-
-
-        function sendMessageOnEnter(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                sendMessage();
-            }
+    
+    // Function to show user suggestions when searching
+    function showUserSuggestions() {
+        const searchInput = document.getElementById("searchUsers").value.toLowerCase();
+        const chatListContainer = document.getElementById("chatListContainer");
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    
+        chatListContainer.innerHTML = ""; // Clear current suggestions
+    
+        const filteredUsers = users.filter(user =>
+            user.username !== loggedInUser.username &&
+            (user.displayName.toLowerCase().includes(searchInput) || user.handle.toLowerCase().includes(searchInput))
+        );
+    
+        filteredUsers.forEach(user => {
+            const chatElement = document.createElement("div");
+            chatElement.className = "chat";
+            chatElement.textContent = user.displayName;
+            chatElement.onclick = () => loadChat(user);
+            chatListContainer.appendChild(chatElement);
+        });
+    }
+    
+    // Logout function
+    function logout() {
+        if (confirm("Are you sure you want to log out?")) {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
         }
+    }
 
-        function scrollToBottom() {
-            const chatMessages = document.getElementById("chatMessages");
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Function to toggle the visibility of the "More" dropdown menu
-        function toggleMoreMenu(event) {
-            event.preventDefault(); // Prevent link default behavior
-            event.stopPropagation(); // Prevents event bubbling to other elements
-
-            const moreDropdown = document.getElementById("moreDropdown");
-            moreDropdown.style.display = (moreDropdown.style.display === "block") ? "none" : "block";
-            
-            // Close dropdown if clicking outside
-            document.addEventListener("click", function closeMenu(e) {
-                if (!moreDropdown.contains(e.target) && e.target !== event.currentTarget) {
-                    moreDropdown.style.display = "none";
-                    document.removeEventListener("click", closeMenu);
-                }
-            });
-        }
-
-// Logout function to confirm before logging out
-function logout() {
-    const confirmLogout = confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-        localStorage.removeItem("loggedInUser"); // Clear logged-in user data
-        window.location.href = "login.html"; // Redirect to login page
+    function sendMessageOnEnter(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault(); // Prevents adding a new line
+        sendMessage(); // Call the sendMessage function
     }
 }
 
 
-function loadChat(user) {
-    // Update the username and profile picture in the chat header
-    document.getElementById("chatUsername").textContent = user.displayName;
-    document.getElementById("chatUserAvatar").src = user.profilePicture || "default-pic.jpg";
-
-    document.getElementById("chatMessages").innerHTML = "";
-
-    const chatData = JSON.parse(localStorage.getItem("chats")) || {};
-    const chatKey = getChatKey(user.username);
-    const messages = chatData[chatKey] || [];
-    messages.forEach(message => displayMessage(message));
-    scrollToBottom();
-    localStorage.setItem("selectedChatUser", JSON.stringify(user));
-
-    // For mobile, show chat content and hide the chat list
-    document.getElementById("chatList").classList.add("hidden");
-    document.getElementById("chatContent").classList.add("active");
-}
 
 
-function showChatList() {
-    // For mobile, show chat list and hide chat content
-    document.getElementById("chatList").classList.remove("hidden");
-    document.getElementById("chatContent").classList.remove("active");
-}
-function showUserSuggestions() {
-    const searchInput = document.getElementById("searchUsers").value.toLowerCase();
-    const chatListContainer = document.getElementById("chatListContainer");
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
-    chatListContainer.innerHTML = ""; // Clear current suggestions
-
-    const filteredUsers = users.filter(user =>
-        user.username !== loggedInUser.username && // Exclude logged-in user
-        (user.displayName.toLowerCase().includes(searchInput) || user.handle.toLowerCase().includes(searchInput))
-    );
-
-    filteredUsers.forEach(user => {
-        const chatElement = document.createElement("div");
-        chatElement.className = "chat";
-        chatElement.textContent = user.displayName;
-        chatElement.onclick = () => loadChat(user);
-        chatListContainer.appendChild(chatElement);
+function toggleOptions(index) {
+    const menu = document.getElementById(`options-${index}`);
+    const allMenus = document.querySelectorAll(".options-menu");
+    allMenus.forEach(m => {
+        if (m !== menu) {
+            m.classList.remove("show"); // Hide other menus
+        }
     });
+    menu.classList.toggle("show"); // Toggle visibility of the current menu
 }
+
+
+
+
+
+function deleteMessage(chatKey, index) {
+    const chats = JSON.parse(localStorage.getItem("chats")) || {};
+    if (chats[chatKey]) {
+        chats[chatKey].splice(index, 1); // Remove the message
+        if (chats[chatKey].length === 0) delete chats[chatKey]; // Delete chat if empty
+        localStorage.setItem("chats", JSON.stringify(chats));
+        loadChat(JSON.parse(localStorage.getItem("selectedChatUser"))); // Reload chat
+    }
+}
+
 
     </script>
+    
+    
 </body>
 </html>
+
