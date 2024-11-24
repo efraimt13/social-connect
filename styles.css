@@ -1586,3 +1586,192 @@ html, body {
     font-weight: bold;
 }
 
+
+
+
+
+/* Bottom Navigation Bar */
+.bottom-nav {
+    display: none; /* Hidden by default */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+    border-top: 1px solid #38444d;
+    z-index: 100;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+}
+
+.bottom-nav .nav-item {
+    color: #8899a6;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9em;
+    transition: color 0.2s;
+}
+
+.bottom-nav .nav-item i {
+    font-size: 1.5em; /* Icon size */
+}
+
+.bottom-nav .nav-item span {
+    font-size: 0.8em; /* Smaller text under icon */
+}
+
+.bottom-nav .nav-item:hover,
+.bottom-nav .nav-item:focus {
+    color: #1da1f2; /* Highlight on hover or focus */
+}
+
+/* Sidebar Hiding and Bottom Nav Showing on Mobile Screens */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none; /* Hide sidebar for mobile screens */
+    }
+
+    .main-content {
+        margin-left: 0; /* Remove left margin for the main content */
+    }
+
+    .bottom-nav {
+        display: flex; /* Show bottom navigation only on mobile */
+    }
+}
+
+/* Desktop Styling: Ensure Bottom Nav Is Hidden */
+@media (min-width: 769px) {
+    .bottom-nav {
+        display: none; /* Ensure bottom navigation is hidden on desktops */
+    }
+
+    .sidebar {
+        display: flex; /* Show sidebar on larger screens */
+    }
+}
+
+
+/* General Styling for Mobile Screens */
+@media (max-width: 768px) {
+    /* Remove Sidebar, Focus on Full-Width Main Content */
+    .sidebar {
+        display: none; /* Hide sidebar completely */
+    }
+
+    .main-content,
+    .messages-container,
+    .profile-content {
+        margin: 0;
+        width: 100%; /* Use full screen width */
+        padding: 10px; /* Add some padding for readability */
+    }
+
+    /* Trending Sidebar Hidden */
+    .trending-sidebar {
+        display: none; /* Disable for mobile */
+    }
+
+    /* Adjust Bottom Navigation */
+    .bottom-nav {
+        display: flex; /* Ensure it's visible on mobile */
+        padding: 15px 0; /* Increase padding for easier tapping */
+    }
+
+    .bottom-nav .nav-item {
+        font-size: 1em; /* Slightly larger for readability */
+    }
+
+    /* Chat Adjustments for Fullscreen Experience */
+    .chats-list {
+        width: 100%; /* Chats list occupies the full screen */
+        max-width: 100%; /* Remove any restrictions */
+        padding: 10px;
+    }
+
+    .chat-content {
+        display: none; /* Initially hidden */
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .chat-content.active {
+        display: flex; /* Show active chat fullscreen */
+    }
+
+    .back-button {
+        display: block; /* Visible back button for navigation */
+    }
+
+    #chatMessages {
+        padding-bottom: 70px; /* Space for bottom nav */
+    }
+
+    .message-input {
+        position: fixed; /* Stick input at the bottom */
+        bottom: 60px; /* Above the bottom nav */
+        width: calc(100% - 20px); /* Full width with padding */
+        background-color: #000; /* Match background */
+    }
+}
+
+/* Desktop Styling */
+@media (min-width: 769px) {
+    .bottom-nav {
+        display: none; /* Hidden on larger screens */
+    }
+
+    .main-content {
+        margin-left: 270px; /* Adjust for the visible sidebar */
+    }
+
+    .trending-sidebar {
+        display: block; /* Visible on larger screens */
+    }
+
+    .chats-list {
+        width: 30%; /* Sidebar width for desktop */
+    }
+
+    .chat-content {
+        width: 70%; /* Main content width */
+    }
+}
+
+/* Bottom Navigation Specifics */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+    border-top: 1px solid #38444d;
+    z-index: 10;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.bottom-nav .nav-item {
+    text-align: center;
+    color: #8899a6;
+    text-decoration: none;
+    font-size: 0.8em;
+    transition: color 0.3s ease;
+}
+
+.bottom-nav .nav-item i {
+    font-size: 1.8em;
+}
+
+.bottom-nav .nav-item:hover {
+    color: #1da1f2; /* Highlight effect */
+}
+
